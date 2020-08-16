@@ -1,7 +1,9 @@
-import 'package:http/http.dart' as http;
+
 import 'package:peliculas/models/pelicula_model.dart';
 
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 class PeliculasProvider {
 
@@ -27,4 +29,22 @@ class PeliculasProvider {
     return peliculas.items;
 
   } 
+
+  Future<List<Pelicula>> getPopulares() async {
+
+    final url = Uri.https(_url, '3/movie/popular',
+    {
+      'api_key'  : _apikey,
+      'language' : _language,
+    });
+
+    final resp = await http.get(url);
+    final decodedData = await json.decode(resp.body);
+
+    final peliculas = new Peliculas.fromJsonList(decodedData['results']);
+    
+    return peliculas.items;
+
+  }
+
 }
